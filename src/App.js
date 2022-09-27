@@ -1,12 +1,15 @@
-import logo from "./logo.svg";
+//import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
+import TodoItem from "./components/TodoItem";
 
 function App() {
-
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
+  // const [isEdit, setIsEdit] = useState(false);
+  // const [editText, setEditText] = useState('');
 
+  // API integration
   useEffect(() => {
     async function getTodo() {
       const response = await fetch(
@@ -21,45 +24,70 @@ function App() {
     getTodo();
   }, []);
 
- const handleTodo = (e) =>{
-      setTodo(e.target.value)
-  }
+  const handleTodo = (e) => {
+    setTodo(e.target.value);
+  };
 
-  const addTodo = () =>{
-        const todoItem ={
-          userId: 1,
-          id: todos.length + 1,
-          title: todo,
-          complete: false
-        }
-        const preData = [...todos]
-        const newData = [...preData, todoItem]
+  //add item
+  const addTodo = () => {
+    const todoItem = {
+      userId: 1,
+      id: todos.length + 1,
+      title: todo,
+      complete: false,
+    };
+    const preData = [...todos];
+    const newData = [...preData, todoItem];
 
-        setTodos(newData);
-        setTodo('');
-  }
+    setTodos(newData);
+    setTodo("");
+  };
 
-  const deleteTodo = (id) =>{
-            const preData = [...todos]
-            const updatedData = preData.filter((todo) =>{
-                return todo.id !== id
-            })
-            setTodos(updatedData);
+  //delete item
+  // const deleteTodo = (id) => {
+  //   const preData = [...todos];
+  //   const updatedData = preData.filter((todo) => {
+  //     return todo.id !== id;
+  //   });
+  //   setTodos(updatedData);
+  // };
 
-  }
+  // const editTodo = (id,title) => {
+  //       setIsEdit(true)
+  //       setEditText(title)
+  // }
+
+  // const handleTodoEdit = (e) =>{
+  //     setEditText(e.target.value)
+  // }
 
   //console.log( 'todos',todos);
 
   return (
     <div className="App">
-      <input type="text" onChange= {handleTodo} value= {todo} />
+      <input type="text" onChange={handleTodo} value={todo} />
       <button onClick={addTodo}>Add Todo</button>
       {todos.map((todo) => {
-        return (<div className="todo-item-container">
-          <div key={todo.id}>{todo.title}
-         </div>
-         <button onClick={() => deleteTodo(todo.id)}> Delete </button>
-        </div>);
+        return (
+          <TodoItem
+            key={todo.id}
+            todos={todos}
+            todo={todo}
+            setTodos={setTodos}
+          />
+        );
+        // return isEdit? (
+        //   <div>
+        //     <input type="text" value={editText} onChange={(e) => handleTodoEdit(e)} />
+        //   </div>
+        // ) : (
+        //   <div className="todo-item-container">
+        //     <div key={todo.id}>{todo.title}</div>
+        //     <button onClick={() => editTodo(todo.id, todo.title)}> Edit </button>
+        //     <button onClick={() => deleteTodo(todo.id)}> Delete </button>
+
+        //   </div>
+        // );
       })}
     </div>
   );
